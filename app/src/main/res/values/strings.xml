@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Flashcards</string>
+    <string name="btn_add">Add</string>
+    <string name="lbl_count">Count</string>
 </resources>

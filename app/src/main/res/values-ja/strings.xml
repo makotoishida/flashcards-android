@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">単語帳</string>
+    <string name="btn_add">追加</string>
+    <string name="lbl_count">登録数</string>
+</resources>
