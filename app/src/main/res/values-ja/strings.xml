@@ -3,4 +3,15 @@
     <string name="app_name">単語帳</string>
     <string name="btn_add">追加</string>
     <string name="lbl_count">登録数</string>
+    <string name="btn_back">戻る</string>
+    <string name="lbl_view_title">単語表示</string>
+    <string name="btn_edit">編集</string>
+    <string name="lbl_edit_title">単語編集</string>
+    <string name="lbl_eng">英語</string>
+    <string name="lbl_jpn">日本語</string>
+    <string name="lbl_done">覚えた</string>
+    <string name="btn_done">覚えた</string>
+    <string name="btn_undone">忘れた</string>
+    <string name="btn_delete">削除</string>
+    <string name="btn_save">保存</string>
 </resources>

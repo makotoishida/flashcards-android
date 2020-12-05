@@ -9,11 +9,27 @@
 
     <TextView
         android:id="@+id/txtRowText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="40dp"
         android:ellipsize="end"
         android:textSize="24sp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="10dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/txtDone"
+        />
+
+    <TextView
+        android:id="@+id/txtDone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:textSize="24sp"
+        android:text="✔️"
+        android:textColor="@color/green"
+        android:textAlignment="center"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txtRowText"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,12 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,30 +23,36 @@ import java.util.List;
 
 public class WordListActivity extends AppCompatActivity {
 
-    ListView listView;
+    private ListView listView;
     private ArrayList<Word> mDataset;
+    private Button btnAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_list);
 
-        listView = findViewById(R.id.list);
-
         mDataset = (ArrayList<Word>) WordsRepository.getInstance().getList();
 
+        listView = findViewById(R.id.list);
         ArrayAdapter<Word> adapter = new MyAdapter(this, R.layout.list_row, mDataset);
-
         listView.setAdapter(adapter);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Word word = mDataset.get(position);
-                Log.d("onItemClick", String.format("onItemClick word id=%d", word._id));
-
                 Intent intent = new Intent(getApplicationContext(), WordViewActivity.class);
                 intent.putExtra("_id", word._id);
+                startActivity(intent);
+            }
+        });
+
+        btnAdd = findViewById(R.id.btnAdd);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), WordEditActivity.class);
+                intent.putExtra("_id", 0);
                 startActivity(intent);
             }
         });
@@ -83,7 +89,8 @@ public class WordListActivity extends AppCompatActivity {
         }
 
         class ViewHolder {
-            TextView textView;
+            TextView txtEng;
+            TextView txtDone;
         }
 
         @Override
@@ -92,7 +99,8 @@ public class WordListActivity extends AppCompatActivity {
             if (convertView == null) {
                 convertView = inflater.inflate(itemLayout, parent, false);
                 holder = new ViewHolder();
-                holder.textView = convertView.findViewById(R.id.txtRowText);
+                holder.txtEng = convertView.findViewById(R.id.txtRowText);
+                holder.txtDone = convertView.findViewById(R.id.txtDone);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -100,7 +108,8 @@ public class WordListActivity extends AppCompatActivity {
 
             Word word = getItem(position);
             if(word != null){
-                holder.textView.setText(word.english);
+                holder.txtEng.setText(word.english);
+                holder.txtDone.setText(word.done ? "✔" : "");
             }
             return convertView;
         }

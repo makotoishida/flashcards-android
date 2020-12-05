@@ -6,11 +6,180 @@
     android:layout_height="match_parent"
     tools:context=".WordEditActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/screen_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/screen_title_height"
+        android:background="@color/purple_100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/screen_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="EDIT"
-        tools:layout_editor_absoluteX="80dp"
-        tools:layout_editor_absoluteY="47dp" />
+        android:layout_marginStart="16dp"
+        android:text="@string/lbl_edit_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintTop_toTopOf="@id/screen_header"
+        app:layout_constraintBottom_toBottomOf="@id/screen_header"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/btn_delete"
+        app:layout_constraintBottom_toBottomOf="@id/screen_header"
+        app:layout_constraintEnd_toEndOf="@+id/screen_header"
+        app:layout_constraintTop_toTopOf="@id/screen_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/screen_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/lbl_eng"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_eng"
+                app:layout_constraintTop_toTopOf="@id/row1"
+                app:layout_constraintBottom_toTopOf="@id/row2"
+                app:layout_constraintStart_toStartOf="@id/col1"
+                />
+
+            <EditText
+                android:id="@+id/txtEng"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="ENGLISH"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:layout_constraintTop_toTopOf="@id/row1"
+                app:layout_constraintBottom_toTopOf="@id/row2"
+                app:layout_constraintStart_toStartOf="@id/col2"
+                app:layout_constraintEnd_toStartOf="@id/col3"
+                />
+
+            <TextView
+                android:id="@+id/lbl_jpn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_jpn"
+                app:layout_constraintTop_toTopOf="@id/row2"
+                app:layout_constraintBottom_toTopOf="@id/row3"
+                app:layout_constraintStart_toStartOf="@id/col1"
+                />
+
+            <EditText
+                android:id="@+id/txtJpn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="日本語です"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:layout_constraintTop_toTopOf="@id/row2"
+                app:layout_constraintBottom_toTopOf="@id/row3"
+                app:layout_constraintStart_toStartOf="@id/col2"
+                app:layout_constraintEnd_toStartOf="@id/col3"
+                />
+
+            <TextView
+                android:id="@+id/lbl_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_done"
+                app:layout_constraintTop_toTopOf="@id/row3"
+                app:layout_constraintBottom_toTopOf="@id/row4"
+                app:layout_constraintStart_toStartOf="@id/col1"
+                />
+
+            <CheckBox
+                android:id="@+id/chkDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                app:layout_constraintTop_toTopOf="@id/row3"
+                app:layout_constraintBottom_toTopOf="@id/row4"
+                app:layout_constraintStart_toStartOf="@id/col2"
+                />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_save"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintTop_toTopOf="@id/row4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:layout_constraintTop_toBottomOf="@id/btnSave"
+                />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/col1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="24dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/col2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.25" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/col3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="24dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/row1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="40dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/row2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="95dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/row3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="150dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/row4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="210dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

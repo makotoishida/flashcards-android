@@ -2,4 +2,15 @@
     <string name="app_name">Flashcards</string>
     <string name="btn_add">Add</string>
     <string name="lbl_count">Count</string>
+    <string name="btn_back">Back</string>
+    <string name="lbl_view_title">View</string>
+    <string name="btn_edit">Edit</string>
+    <string name="lbl_edit_title">Edit</string>
+    <string name="lbl_eng">English</string>
+    <string name="lbl_jpn">Japanese</string>
+    <string name="lbl_done">Done</string>
+    <string name="btn_done">Done</string>
+    <string name="btn_undone">Not sure</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_save">Save</string>
 </resources>
