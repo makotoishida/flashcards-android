@@ -17,4 +17,8 @@ public class Word {
         done = is_done;
     }
 
+    public String getDoneString() {
+        return this.done ? "✔" : "";
+    }
+
 }

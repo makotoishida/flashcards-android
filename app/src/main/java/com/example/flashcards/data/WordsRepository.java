@@ -41,9 +41,15 @@ public class WordsRepository {
     }
 
     public Word getById(int id) {
+        if (id == 0){
+            return new Word(0, "", "");
+        }
+
         for (int i = 0; i < mList.size(); i++) {
             if (mList.get(i)._id == id) return mList.get(i);
         }
+
         return null;
     }
+
 }

@@ -16,8 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WordViewActivity" android:parentActivityName=".WordListActivity" />
-        <activity android:name=".WordEditActivity" android:parentActivityName=".WordViewActivity" />
+        <activity android:name=".WordViewActivity" />
+        <activity android:name=".WordEditActivity" />
     </application>
 
 </manifest>

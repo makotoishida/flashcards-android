@@ -33,34 +33,43 @@ public class WordListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_list);
 
-        mDataset = (ArrayList<Word>) WordsRepository.getInstance().getList();
+        loadWordList();
 
         listView = findViewById(R.id.list);
         ArrayAdapter<Word> adapter = new MyAdapter(this, R.layout.list_row, mDataset);
+        adapter.setNotifyOnChange(true);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Word word = mDataset.get(position);
-                Intent intent = new Intent(getApplicationContext(), WordViewActivity.class);
-                intent.putExtra("_id", word._id);
-                startActivity(intent);
-            }
-        });
+        listView.setOnItemClickListener(mOnItemClick);
 
         btnAdd = findViewById(R.id.btnAdd);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), WordEditActivity.class);
-                intent.putExtra("_id", 0);
-                startActivity(intent);
-            }
-        });
+        btnAdd.setOnClickListener(mBtnAddOnClick);
 
         txtCount = findViewById(R.id.txtCount);
         txtCount.setText(String.format("%d", mDataset.size()));
     }
+
+    private void loadWordList() {
+        mDataset = (ArrayList<Word>) WordsRepository.getInstance().getList();
+    }
+
+    private AdapterView.OnItemClickListener mOnItemClick = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Word word = mDataset.get(position);
+            Intent intent = new Intent(getApplicationContext(), WordViewActivity.class);
+            intent.putExtra("_id", word._id);
+            startActivity(intent);
+        }
+    };
+
+    private View.OnClickListener mBtnAddOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getApplicationContext(), WordEditActivity.class);
+            intent.putExtra("_id", 0);
+            startActivity(intent);
+        }
+    };
 
 
     public static class MyAdapter extends ArrayAdapter<Word> {
@@ -113,7 +122,7 @@ public class WordListActivity extends AppCompatActivity {
             Word word = getItem(position);
             if(word != null){
                 holder.txtEng.setText(word.english);
-                holder.txtDone.setText(word.done ? "✔" : "");
+                holder.txtDone.setText(word.getDoneString());
             }
             return convertView;
         }
