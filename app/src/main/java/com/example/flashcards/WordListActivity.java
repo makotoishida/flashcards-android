@@ -26,6 +26,7 @@ public class WordListActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayList<Word> mDataset;
     private Button btnAdd;
+    private TextView txtCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,9 @@ public class WordListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        txtCount = findViewById(R.id.txtCount);
+        txtCount.setText(String.format("%d", mDataset.size()));
     }
 
 
