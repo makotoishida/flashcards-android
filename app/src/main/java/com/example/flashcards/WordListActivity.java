@@ -24,7 +24,8 @@ import java.util.List;
 public class WordListActivity extends AppCompatActivity {
 
     private ListView listView;
-    private ArrayList<Word> mDataset;
+    private ArrayList<Word> mDataset = new ArrayList<Word>();
+    ArrayAdapter<Word> adapter;
     private Button btnAdd;
     private TextView txtCount;
 
@@ -33,10 +34,8 @@ public class WordListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_list);
 
-        loadWordList();
-
         listView = findViewById(R.id.list);
-        ArrayAdapter<Word> adapter = new MyAdapter(this, R.layout.list_row, mDataset);
+        adapter = new MyAdapter(this, R.layout.list_row, mDataset);
         adapter.setNotifyOnChange(true);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(mOnItemClick);
@@ -45,11 +44,23 @@ public class WordListActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(mBtnAddOnClick);
 
         txtCount = findViewById(R.id.txtCount);
-        txtCount.setText(String.format("%d", mDataset.size()));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadWordList();
     }
 
     private void loadWordList() {
         mDataset = (ArrayList<Word>) WordsRepository.getInstance().getList();
+
+        adapter.clear();
+        adapter.addAll(mDataset);
+        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetInvalidated();
+
+        txtCount.setText(String.format("%d", mDataset.size()));
     }
 
     private AdapterView.OnItemClickListener mOnItemClick = new AdapterView.OnItemClickListener() {

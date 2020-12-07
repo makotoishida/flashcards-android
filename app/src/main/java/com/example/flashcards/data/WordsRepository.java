@@ -52,4 +52,11 @@ public class WordsRepository {
         return null;
     }
 
+    public void updateDone(int id, boolean done) {
+        Word word = getById(id);
+        if (word == null) return;
+
+        word.done = done;
+    }
+
 }

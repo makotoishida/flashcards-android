@@ -4,7 +4,7 @@ public class Word {
     public int _id;
     public String english;
     public String japanese;
-    public Boolean done = false;
+    public boolean done = false;
 
     public Word(int id, String eng, String jpn) {
         this(id, eng, jpn, false);

@@ -39,8 +39,9 @@ public class WordViewActivity extends AppCompatActivity {
         txtDone = findViewById(R.id.txtDone);
 
         btnDone = findViewById(R.id.btnDone);
+        btnDone.setOnClickListener(mBtnDoneClick);
         btnUndone = findViewById(R.id.btnUndone);
-
+        btnUndone.setOnClickListener(mBtnUndoneClick);
     }
 
     @Override
@@ -87,6 +88,22 @@ public class WordViewActivity extends AppCompatActivity {
             intent.putExtra("_id", mWordId);
             startActivity(intent);
 
+        }
+    };
+
+    private View.OnClickListener mBtnDoneClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            WordsRepository.getInstance().updateDone(mWordId, true);
+            loadWord(mWordId);
+        }
+    };
+
+    private View.OnClickListener mBtnUndoneClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            WordsRepository.getInstance().updateDone(mWordId, false);
+            loadWord(mWordId);
         }
     };
 
