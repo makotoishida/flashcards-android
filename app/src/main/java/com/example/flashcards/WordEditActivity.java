@@ -27,7 +27,7 @@ public class WordEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_edit);
 
-        // Show Back icon button in the ActionBar
+        // Show Back icon in the ActionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         btnDelete = findViewById(R.id.btnDelete);
@@ -38,13 +38,10 @@ public class WordEditActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // Back to the previous screen when 'Back' button is pressed.
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public boolean onSupportNavigateUp() {
+        // Finish this activity and go back to the previous screen.
+        finish();
+        return super.onSupportNavigateUp();
     }
 
     @Override
