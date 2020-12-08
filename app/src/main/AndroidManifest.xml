@@ -16,8 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WordViewActivity" />
-        <activity android:name=".WordEditActivity" />
+        <activity android:name=".WordViewActivity" android:label="@string/lbl_view_title" />
+        <activity android:name=".WordEditActivity" android:label="@string/lbl_edit_title" />
     </application>
 
 </manifest>

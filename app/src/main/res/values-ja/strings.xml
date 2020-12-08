@@ -4,7 +4,7 @@
     <string name="btn_add">追加</string>
     <string name="lbl_count">登録数</string>
     <string name="btn_back">戻る</string>
-    <string name="lbl_view_title">単語表示</string>
+    <string name="lbl_view_title">単語確認</string>
     <string name="btn_edit">編集</string>
     <string name="lbl_edit_title">単語編集</string>
     <string name="lbl_eng">英語</string>
