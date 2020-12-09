@@ -14,4 +14,8 @@
     <string name="btn_undone">忘れた</string>
     <string name="btn_delete">削除</string>
     <string name="btn_save">保存</string>
+    <string name="msg_error">エラーが発生しました</string>
+    <string name="msg_saved">保存しました</string>
+    <string name="msg_deleted">削除しました</string>
+    <string name="lbl_add_title">単語追加</string>
 </resources>

@@ -2,12 +2,13 @@ package com.example.flashcards.data;
 
 import android.provider.UserDictionary;
 
+import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WordsRepository {
 
-    private ArrayList<Word> mList = new ArrayList();
+    private ArrayList<Word> mList = null;
 
     private static WordsRepository sInstance = new WordsRepository();
     private WordsRepository() {}
@@ -17,6 +18,7 @@ public class WordsRepository {
     }
 
     private void loadData() {
+        if (mList == null) mList = new ArrayList();
         mList.add(new Word(1, "world", "世界"));
         mList.add(new Word(2, "space", "宇宙", true));
         mList.add(new Word(3, "moon", "月"));
@@ -34,9 +36,7 @@ public class WordsRepository {
     }
 
     public List<Word> getList() {
-        if (mList.size() == 0) {
-            loadData();
-        }
+        if (mList == null) loadData();
         return mList;
     }
 
@@ -52,11 +52,43 @@ public class WordsRepository {
         return null;
     }
 
-    public void updateDone(int id, boolean done) {
+    public void updateDone(int id, boolean done) throws InvalidKeyException {
         Word word = getById(id);
-        if (word == null) return;
+        if (word == null) {
+            throw new InvalidKeyException("");
+        }
 
         word.done = done;
+    }
+
+    private int getMaxId() {
+        int max = Integer.MIN_VALUE;
+        for (Word i: mList) {
+            if (i._id > max) max = i._id;
+        }
+        return max;
+    }
+
+    public void save(Word word) throws InvalidKeyException {
+        if (word._id == 0) {
+            word._id = getMaxId() + 1;
+            mList.add(word);
+            return;
+        }
+
+        Word existing = getById(word._id);
+        if (existing == null) {
+            throw new InvalidKeyException("");
+        }
+        existing.english = word.english;
+        existing.japanese = word.japanese;
+        existing.done = word.done;
+    }
+
+    public void delete(int id) {
+        Word existing = getById(id);
+        if (existing == null) return;
+        mList.remove(existing);
     }
 
 }

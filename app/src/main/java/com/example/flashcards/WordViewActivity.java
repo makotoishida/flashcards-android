@@ -9,9 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.flashcards.data.Word;
 import com.example.flashcards.data.WordsRepository;
+
+import java.security.InvalidKeyException;
+import java.time.Duration;
 
 public class WordViewActivity extends AppCompatActivity {
 
@@ -76,6 +80,9 @@ public class WordViewActivity extends AppCompatActivity {
         txtEng.setText(word.english);
         txtJpn.setText(word.japanese);
         txtDone.setText(word.getDoneString());
+
+        btnDone.setEnabled(!word.done);
+        btnUndone.setEnabled(word.done);
     }
 
     private View.OnClickListener mBtnEditClick = new View.OnClickListener() {
@@ -91,7 +98,12 @@ public class WordViewActivity extends AppCompatActivity {
     private View.OnClickListener mBtnDoneClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            WordsRepository.getInstance().updateDone(mWordId, true);
+            try {
+                WordsRepository.getInstance().updateDone(mWordId, true);
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+                Toast.makeText(v.getContext(), R.string.msg_error, Toast.LENGTH_LONG).show();
+            }
             loadWord(mWordId);
         }
     };
@@ -99,7 +111,12 @@ public class WordViewActivity extends AppCompatActivity {
     private View.OnClickListener mBtnUndoneClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            WordsRepository.getInstance().updateDone(mWordId, false);
+            try {
+                WordsRepository.getInstance().updateDone(mWordId, false);
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+                Toast.makeText(v.getContext(), R.string.msg_error, Toast.LENGTH_LONG).show();
+            }
             loadWord(mWordId);
         }
     };

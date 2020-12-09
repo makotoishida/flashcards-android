@@ -15,24 +15,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/screen_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/lbl_edit_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintTop_toTopOf="@id/screen_header"
-        app:layout_constraintBottom_toBottomOf="@id/screen_header"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-
     <Button
         android:id="@+id/btnDelete"
+        style="@style/Widget.AppCompat.Button.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="@string/btn_delete"
+        android:textAlignment="center"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/screen_header"
         app:layout_constraintEnd_toEndOf="@+id/screen_header"
         app:layout_constraintTop_toTopOf="@id/screen_header" />
@@ -64,6 +55,8 @@
                 android:layout_height="wrap_content"
                 android:text="ENGLISH"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:inputType="text"
+                android:maxLength="50"
                 app:layout_constraintTop_toTopOf="@id/row1"
                 app:layout_constraintBottom_toTopOf="@id/row2"
                 app:layout_constraintStart_toStartOf="@id/col2"
@@ -86,6 +79,8 @@
                 android:layout_height="wrap_content"
                 android:text="日本語です"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:inputType="text"
+                android:maxLength="50"
                 app:layout_constraintTop_toTopOf="@id/row2"
                 app:layout_constraintBottom_toTopOf="@id/row3"
                 app:layout_constraintStart_toStartOf="@id/col2"
@@ -118,10 +113,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/btn_save"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintTop_toTopOf="@id/row4"
-                app:layout_constraintStart_toStartOf="parent"
+                app:icon="@android:drawable/ic_menu_save"
                 app:layout_constraintEnd_toEndOf="parent"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/row4" />
 
             <Space
                 android:layout_width="match_parent"

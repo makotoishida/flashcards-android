@@ -13,4 +13,8 @@
     <string name="btn_undone">Not sure</string>
     <string name="btn_delete">Delete</string>
     <string name="btn_save">Save</string>
+    <string name="msg_error">An error occurred</string>
+    <string name="msg_saved">Data saved</string>
+    <string name="msg_deleted">Deleted</string>
+    <string name="lbl_add_title">Add</string>
 </resources>
