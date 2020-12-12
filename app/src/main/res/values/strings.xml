@@ -17,4 +17,5 @@
     <string name="msg_saved">Data saved</string>
     <string name="msg_deleted">Deleted</string>
     <string name="lbl_add_title">Add</string>
+    <string name="msg_confirm_delete">Are you sure to delete?</string>
 </resources>

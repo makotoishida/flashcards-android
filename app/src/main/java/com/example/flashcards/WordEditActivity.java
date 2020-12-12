@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -14,12 +15,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import java.security.InvalidKeyException;
 import com.example.flashcards.data.Word;
 import com.example.flashcards.data.WordsRepository;
+import com.example.flashcards.services.CommonHelper;
 
-import java.security.InvalidKeyException;
+import static com.example.flashcards.services.CommonHelper.showErrorDialog;
+import static com.example.flashcards.services.CommonHelper.showToast;
 
 public class WordEditActivity extends AppCompatActivity implements TextWatcher {
 
@@ -29,6 +31,7 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
     private CheckBox chkDone;
     private Button btnDelete;
     private Button btnSave;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,8 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
         txtEng.setImeOptions(EditorInfo.IME_FLAG_FORCE_ASCII);
         txtEng.addTextChangedListener(this);
         txtJpn.addTextChangedListener(this);
+
+        mHandler = new Handler(this.getMainLooper());
     }
 
     @Override
@@ -100,11 +105,11 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
                 WordsRepository.getInstance().save(word);
             } catch (InvalidKeyException e) {
                 e.printStackTrace();
-                Toast.makeText(v.getContext(), R.string.msg_error, Toast.LENGTH_LONG).show();
+                showErrorDialog(e, v.getContext());
                 return;
             }
 
-            Toast.makeText(v.getContext(), R.string.msg_saved, Toast.LENGTH_LONG).show();
+            showToast(mHandler, v.getContext(), getString(R.string.msg_saved));
             finish();
         }
     };
@@ -112,15 +117,31 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
     private final View.OnClickListener mBtnDeleteClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            CommonHelper.showOkCancelDialog(v.getContext(), getString(R.string.msg_confirm_delete),
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        deleteWord();
+                    }
+                });
+        }
+    };
+
+    private void deleteWord() {
+        try {
             WordsRepository.getInstance().delete(mWordId);
-            Toast.makeText(v.getContext(), R.string.msg_deleted, Toast.LENGTH_LONG).show();
+            showToast(mHandler, this, getString(R.string.msg_deleted));
 
             // Go back directly to the List activity after deleting.
             Intent intent = new Intent(getApplicationContext(), WordListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);        // CLEARS THE STACK!
             startActivity(intent);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorDialog(e, this);
         }
-    };
+    }
 
 
     @Override

@@ -85,7 +85,7 @@ public class WordsRepository {
         existing.done = word.done;
     }
 
-    public void delete(int id) {
+    public void delete(int id) throws Exception {
         Word existing = getById(id);
         if (existing == null) return;
         mList.remove(existing);
