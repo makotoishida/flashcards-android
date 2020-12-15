@@ -27,16 +27,17 @@ public class WordsRepository {
     public List<Word> getList() {
         ArrayList<Word> list = new ArrayList<>();
 
-        final Cursor cursor = getDb().rawQuery("SELECT * FROM words ORDER BY _id", null);
-        while (cursor.moveToNext()){
-            int id = cursor.getInt(cursor.getColumnIndex("_id"));
-            String eng = cursor.getString(cursor.getColumnIndex("english"));
-            String jpn = cursor.getString(cursor.getColumnIndex("japanese"));
-            int done = cursor.getInt(cursor.getColumnIndex("done"));
-            final Word word = new Word(id, eng, jpn, done != 0);
-            list.add(word);
+        // tryの括弧内でCursorを生成することで自動的にcloseされる。
+        try(final Cursor cursor = getDb().rawQuery("SELECT * FROM words ORDER BY _id", null)){
+            while (cursor.moveToNext()){
+                int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                String eng = cursor.getString(cursor.getColumnIndex("english"));
+                String jpn = cursor.getString(cursor.getColumnIndex("japanese"));
+                int done = cursor.getInt(cursor.getColumnIndex("done"));
+                final Word word = new Word(id, eng, jpn, done != 0);
+                list.add(word);
+            }
         }
-        cursor.close();
 
         return list;
     }
@@ -48,14 +49,19 @@ public class WordsRepository {
 
         Word word = null;
         String[] args = { Integer.toString(id) };
-        final Cursor cursor = getDb().rawQuery("SELECT * FROM words WHERE _id = ?", args);
-        if (cursor.moveToNext()){
-            String eng = cursor.getString(cursor.getColumnIndex("english"));
-            String jpn = cursor.getString(cursor.getColumnIndex("japanese"));
-            int done = cursor.getInt(cursor.getColumnIndex("done"));
-            word = new Word(id, eng, jpn, done != 0);
+
+        // tryの括弧内でCursorを生成することで自動的にcloseされる。
+        try (final Cursor cursor = getDb().rawQuery("SELECT * FROM words WHERE _id = ?", args)) {
+            // 結果は1行か0行かのどちらかなので、whileでループする必要はない。
+            if (cursor.moveToFirst()){
+                String eng = cursor.getString(cursor.getColumnIndex("english"));
+                String jpn = cursor.getString(cursor.getColumnIndex("japanese"));
+                int done = cursor.getInt(cursor.getColumnIndex("done"));
+                word = new Word(id, eng, jpn, done != 0);
+            }
         }
-        cursor.close();
+
+
 
         return word;
     }
