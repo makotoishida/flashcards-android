@@ -21,14 +21,18 @@ import com.example.flashcards.data.WordsRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 単語一覧画面
+ */
 public class WordListActivity extends AppCompatActivity {
 
     private ListView listView;
-    private ArrayList<Word> mDataset = new ArrayList<Word>();
+    private ArrayList<Word> mDataset = new ArrayList<>();
     ArrayAdapter<Word> adapter;
     private Button btnAdd;
     private TextView txtCount;
 
+    // Activityが新規に生成された時の処理
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,12 +50,14 @@ public class WordListActivity extends AppCompatActivity {
         txtCount = findViewById(R.id.txtCount);
     }
 
+    // Activityが新規に生成された、または別画面から戻って来た時の処理
     @Override
     protected void onResume() {
         super.onResume();
         loadWordList();
     }
 
+    // 単語データの配列をデータベースから取得。
     private void loadWordList() {
         mDataset = (ArrayList<Word>) WordsRepository.getInstance().getList();
 
@@ -63,6 +69,7 @@ public class WordListActivity extends AppCompatActivity {
         txtCount.setText(String.format("%d", mDataset.size()));
     }
 
+    // 一覧リストの行がタップされた時の処理
     private AdapterView.OnItemClickListener mOnItemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -73,6 +80,7 @@ public class WordListActivity extends AppCompatActivity {
         }
     };
 
+    // 追加ボタンがタップされた時の処理
     private View.OnClickListener mBtnAddOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -82,7 +90,7 @@ public class WordListActivity extends AppCompatActivity {
         }
     };
 
-
+    // 一覧リスト表示用アダプタ
     public static class MyAdapter extends ArrayAdapter<Word> {
         private final List<Word> mDataset;
         private LayoutInflater inflater;
@@ -112,6 +120,7 @@ public class WordListActivity extends AppCompatActivity {
             return mDataset.get(position)._id;
         }
 
+        // 各行内の要素への参照を保持しておくための入れ物となるクラス。
         class ViewHolder {
             TextView txtEng;
             TextView txtDone;
@@ -121,15 +130,18 @@ public class WordListActivity extends AppCompatActivity {
         public @NonNull View getView(int position, View convertView, @NonNull ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
+                // 行のViewが新規に生成された場合はtxtEng, txtDoneへの参照をViewHolderに入れておく。
                 convertView = inflater.inflate(itemLayout, parent, false);
                 holder = new ViewHolder();
                 holder.txtEng = convertView.findViewById(R.id.txtRowText);
                 holder.txtDone = convertView.findViewById(R.id.txtDone);
                 convertView.setTag(holder);
             } else {
+                // 行のViewが生成済みの場合はViewHolderを取得する。
                 holder = (ViewHolder) convertView.getTag();
             }
 
+            // 現在の行に英語とDoneフラグの値を表示する。
             Word word = getItem(position);
             if(word != null){
                 holder.txtEng.setText(word.english);

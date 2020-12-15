@@ -17,6 +17,9 @@ import com.example.flashcards.data.WordsRepository;
 import java.security.InvalidKeyException;
 import java.time.Duration;
 
+/**
+ * 単語確認画面
+ */
 public class WordViewActivity extends AppCompatActivity {
 
     private int mWordId;
@@ -32,7 +35,7 @@ public class WordViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_view);
 
-        // Show Back icon in the ActionBar
+        // 画面上部のActionBarの左端に「←（戻る）」アイコンを表示する。
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         btnEdit = findViewById(R.id.btnEdit);
@@ -50,25 +53,31 @@ public class WordViewActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        // Finish this activity and go back to the previous screen.
+        // このActivityを終了して前の画面に戻る。
         finish();
         return super.onSupportNavigateUp();
     }
 
+    // Activityが新規に生成された、または別画面から戻って来た時の処理
     @Override
     protected void onResume() {
         super.onResume();
 
+        // 渡されたインテントから単語IDを得る。
         Intent intent = getIntent();
         mWordId = intent.getIntExtra("_id", 0);
+
+        // 指定された単語のデータをデータベースから取得して表示する。
         loadWord(mWordId);
     }
 
+    // 指定された単語のデータをデータベースから取得して表示する。
     private void loadWord(int id) {
         Word word = WordsRepository.getInstance().getById(id);
         showWord(word);
     }
 
+    // 単語を表示する。
     private void showWord(Word word) {
         if (word == null) {
             txtEng.setText("");
@@ -85,9 +94,11 @@ public class WordViewActivity extends AppCompatActivity {
         btnUndone.setEnabled(word.done);
     }
 
+    // 「編集」ボタンが押された時の処理
     private View.OnClickListener mBtnEditClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            // 単語IDをインテントに入れて単語編集画面を開く。
             Intent intent = new Intent(getApplicationContext(), WordEditActivity.class);
             intent.putExtra("_id", mWordId);
             startActivity(intent);
@@ -95,30 +106,33 @@ public class WordViewActivity extends AppCompatActivity {
         }
     };
 
+    // 「覚えた」ボタンが押された時の処理
     private View.OnClickListener mBtnDoneClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            try {
-                WordsRepository.getInstance().updateDone(mWordId, true);
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-                Toast.makeText(v.getContext(), R.string.msg_error, Toast.LENGTH_LONG).show();
-            }
-            loadWord(mWordId);
+            updateDone(true);
         }
     };
 
+    // 「忘れた」ボタンが押された時の処理
     private View.OnClickListener mBtnUndoneClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            try {
-                WordsRepository.getInstance().updateDone(mWordId, false);
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-                Toast.makeText(v.getContext(), R.string.msg_error, Toast.LENGTH_LONG).show();
-            }
-            loadWord(mWordId);
+            updateDone(false);
         }
     };
+
+    private void updateDone(boolean done) {
+        try {
+            // データベースのdoneフラグを更新する。
+            WordsRepository.getInstance().updateDone(mWordId, done);
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+            Toast.makeText(this, R.string.msg_error, Toast.LENGTH_LONG).show();
+        }
+
+        // データベースから最新の情報を取得して画面表示を更新する。
+        loadWord(mWordId);
+    }
 
 }

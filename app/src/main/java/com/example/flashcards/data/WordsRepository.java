@@ -1,7 +1,6 @@
 package com.example.flashcards.data;
 
-import android.provider.UserDictionary;
-
+import android.content.Context;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +10,13 @@ public class WordsRepository {
     private ArrayList<Word> mList = null;
 
     private static WordsRepository sInstance = new WordsRepository();
+
     private WordsRepository() {}
 
     public static WordsRepository getInstance() {
+        if (sInstance == null) {
+            sInstance = new WordsRepository();
+        }
         return sInstance;
     }
 

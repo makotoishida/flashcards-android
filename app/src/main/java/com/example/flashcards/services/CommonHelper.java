@@ -4,20 +4,37 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
+import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 public class CommonHelper {
 
-    public static void showToast(final Handler handler, final Context context, final String msg) {
+    // Toastを表示する。
+    // 　参考：https://developer.android.com/guide/topics/ui/notifiers/toasts?hl=ja
+    public static void showToast(final Handler handler, final Context context, final int msgId) {
         handler.post(new Runnable() {
             @Override
             public void run() {
+                String msg = context.getString(msgId);
                 Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    //例外の内容をダイアログで表示
+    // Snackbarを表示する。
+    // 　参考：https://developer.android.com/training/snackbar?hl=ja
+    public static void showSnackbar(final Handler handler, final View view, final int msgId) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(view, msgId, Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    // 例外の内容をダイアログで表示する。
     public static void showErrorDialog(final Exception e, final Context context) {
         new AlertDialog.Builder(context)
                 .setMessage(e.getMessage())
@@ -29,7 +46,7 @@ public class CommonHelper {
                 }).show();
     }
 
-    //OK/Cancelダイアログを表示
+    // OK/Cancelダイアログを表示する。
     public static void showOkCancelDialog(final Context context, final String msg, final Runnable callback) {
         new AlertDialog.Builder(context)
                 .setMessage(msg)

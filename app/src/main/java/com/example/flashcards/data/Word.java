@@ -20,5 +20,4 @@ public class Word {
     public String getDoneString() {
         return this.done ? "✔" : "";
     }
-
 }
