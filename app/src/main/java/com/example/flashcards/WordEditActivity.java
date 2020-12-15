@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -133,6 +134,9 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
         } catch (InvalidKeyException e) {
             e.printStackTrace();
             showErrorDialog(e, this);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showErrorDialog(e, this);
         }
     }
 
@@ -157,7 +161,7 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
             mRepository.delete(mWordId);
             showToast(mHandler, this, R.string.msg_deleted);
             backToList();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             showErrorDialog(e, this);
         }
