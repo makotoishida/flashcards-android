@@ -36,6 +36,9 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
     private Button btnSave;
     private Handler mHandler;
 
+    // データベースに接続されたリポジトリクラスのインスタンスを取得して保持しておく。
+    private WordsRepository mRepository = MyApplication.getInstance().getWordsRepository();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +85,7 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
 
     // 指定された単語のデータをデータベースから取得して表示する。
     private void loadWord(int id) {
-        Word word = WordsRepository.getInstance().getById(id);
+        Word word = mRepository.getById(id);
         showWord(word);
     }
 
@@ -122,7 +125,7 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
             boolean done = chkDone.isChecked();
             Word word = new Word(mWordId, eng, jpn ,done);
 
-            WordsRepository.getInstance().save(word);
+            mRepository.save(word);
 
             showToast(mHandler, this.getApplicationContext(), R.string.msg_saved);
             finish();
@@ -151,7 +154,7 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
     // 単語をデータベースから削除する。
     private void deleteWord() {
         try {
-            WordsRepository.getInstance().delete(mWordId);
+            mRepository.delete(mWordId);
             showToast(mHandler, this, R.string.msg_deleted);
             backToList();
         } catch (Exception e) {

@@ -30,6 +30,9 @@ public class WordViewActivity extends AppCompatActivity {
     private Button btnUndone;
     private Button btnEdit;
 
+    // データベースに接続されたリポジトリクラスのインスタンスを取得して保持しておく。
+    private WordsRepository mRepository = MyApplication.getInstance().getWordsRepository();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +76,7 @@ public class WordViewActivity extends AppCompatActivity {
 
     // 指定された単語のデータをデータベースから取得して表示する。
     private void loadWord(int id) {
-        Word word = WordsRepository.getInstance().getById(id);
+        Word word = mRepository.getById(id);
         showWord(word);
     }
 
@@ -125,7 +128,7 @@ public class WordViewActivity extends AppCompatActivity {
     private void updateDone(boolean done) {
         try {
             // データベースのdoneフラグを更新する。
-            WordsRepository.getInstance().updateDone(mWordId, done);
+            mRepository.updateDone(mWordId, done);
         } catch (InvalidKeyException e) {
             e.printStackTrace();
             Toast.makeText(this, R.string.msg_error, Toast.LENGTH_LONG).show();

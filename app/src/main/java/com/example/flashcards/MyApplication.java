@@ -32,11 +32,16 @@ public class MyApplication extends Application {
     }
 
     // データベースへの接続を返す。（未Openの場合はOpenし、Open済みの場合は既存の接続を返す。）
-    public SQLiteDatabase getDb() {
+    private SQLiteDatabase getDb() {
         if (mDbHelper == null) {
             mDbHelper = new DatabaseHelper(this);
         }
         return mDbHelper.getWritableDatabase();
+    }
+
+    // Wordsリポジトリクラスのインスタンスを返す。
+    public WordsRepository getWordsRepository() {
+        return new WordsRepository(getDb());
     }
 
 }

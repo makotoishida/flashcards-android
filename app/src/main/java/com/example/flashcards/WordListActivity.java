@@ -32,6 +32,9 @@ public class WordListActivity extends AppCompatActivity {
     private Button btnAdd;
     private TextView txtCount;
 
+    // データベースに接続されたリポジトリクラスのインスタンスを取得して保持しておく。
+    private WordsRepository mRepository = MyApplication.getInstance().getWordsRepository();
+
     // Activityが新規に生成された時の処理
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +62,7 @@ public class WordListActivity extends AppCompatActivity {
 
     // 単語データの配列をデータベースから取得。
     private void loadWordList() {
-        mDataset = (ArrayList<Word>) WordsRepository.getInstance().getList();
+        mDataset = (ArrayList<Word>) mRepository.getList();
 
         adapter.clear();
         adapter.addAll(mDataset);

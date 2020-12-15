@@ -12,23 +12,18 @@ import java.util.List;
 
 public class WordsRepository {
 
-    private static WordsRepository sInstance = new WordsRepository();
+    SQLiteDatabase mDb;
 
-    private WordsRepository() {}
-
-    public static WordsRepository getInstance() {
-        return sInstance;
-    }
-
-    private SQLiteDatabase getDb() {
-        return MyApplication.getInstance().getDb();
+    public WordsRepository(SQLiteDatabase db) {
+        mDb = db;
     }
 
     public List<Word> getList() {
         ArrayList<Word> list = new ArrayList<>();
 
         // tryの括弧内でCursorを生成することで自動的にcloseされる。
-        try(final Cursor cursor = getDb().rawQuery("SELECT * FROM words ORDER BY _id", null)){
+        // 　参考：https://mslgt.hatenablog.com/entry/2018/04/05/073400
+        try(final Cursor cursor = mDb.rawQuery("SELECT * FROM words ORDER BY _id", null)){
             while (cursor.moveToNext()){
                 int id = cursor.getInt(cursor.getColumnIndex("_id"));
                 String eng = cursor.getString(cursor.getColumnIndex("english"));
@@ -51,8 +46,9 @@ public class WordsRepository {
         String[] args = { Integer.toString(id) };
 
         // tryの括弧内でCursorを生成することで自動的にcloseされる。
-        try (final Cursor cursor = getDb().rawQuery("SELECT * FROM words WHERE _id = ?", args)) {
-            // 結果は1行か0行かのどちらかなので、whileでループする必要はない。
+        // 　参考：https://mslgt.hatenablog.com/entry/2018/04/05/073400
+        try (final Cursor cursor = mDb.rawQuery("SELECT * FROM words WHERE _id = ?", args)) {
+            // 主キーで絞っているため結果は1行か0行かのどちらかなのでwhileでループする必要はない。
             if (cursor.moveToFirst()){
                 String eng = cursor.getString(cursor.getColumnIndex("english"));
                 String jpn = cursor.getString(cursor.getColumnIndex("japanese"));
@@ -74,14 +70,14 @@ public class WordsRepository {
 
         String sql = "UPDATE words SET done = ? WHERE _id = ? ";
         String [] args = { done ? "1" : "0", Integer.toString(id)};
-        getDb().execSQL(sql, args);
+        mDb.execSQL(sql, args);
     }
 
     public void save(Word word) throws InvalidKeyException {
         if (word._id == 0) {
             String sql = "INSERT INTO words (english, japanese, done) VALUES (?, ?, ?) ";
             String[] args = { word.english, word.japanese, word.done ? "1" : "0" };
-            getDb().execSQL(sql, args);
+            mDb.execSQL(sql, args);
             return;
         }
 
@@ -92,7 +88,7 @@ public class WordsRepository {
 
         String sql = "UPDATE words SET english = ?, japanese = ?, done =? WHERE _id = ? ";
         String[] args = { word.english, word.japanese, word.done ? "1" : "0", Integer.toString(word._id) };
-        getDb().execSQL(sql, args);
+        mDb.execSQL(sql, args);
     }
 
     public void delete(int id) throws Exception {
@@ -101,7 +97,7 @@ public class WordsRepository {
 
         String sql = "DELETE FROM words WHERE _id = ? ";
         String [] args = { Integer.toString(id)};
-        getDb().execSQL(sql, args);
+        mDb.execSQL(sql, args);
     }
 
 }
