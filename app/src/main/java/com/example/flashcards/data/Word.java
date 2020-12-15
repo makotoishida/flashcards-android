@@ -10,7 +10,7 @@ public class Word {
         this(id, eng, jpn, false);
     }
 
-    public Word(int id, String eng, String jpn, Boolean is_done) {
+    public Word(int id, String eng, String jpn, boolean is_done) {
         _id = id;
         english = eng;
         japanese = jpn;

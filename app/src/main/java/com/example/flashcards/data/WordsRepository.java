@@ -1,46 +1,44 @@
 package com.example.flashcards.data;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.flashcards.MyApplication;
+
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WordsRepository {
 
-    private ArrayList<Word> mList = null;
-
     private static WordsRepository sInstance = new WordsRepository();
 
     private WordsRepository() {}
 
     public static WordsRepository getInstance() {
-        if (sInstance == null) {
-            sInstance = new WordsRepository();
-        }
         return sInstance;
     }
 
-    private void loadData() {
-        if (mList == null) mList = new ArrayList();
-        mList.add(new Word(1, "world", "世界"));
-        mList.add(new Word(2, "space", "宇宙", true));
-        mList.add(new Word(3, "moon", "月"));
-        mList.add(new Word(4, "star", "星"));
-        mList.add(new Word(5, "earth", "地球", true));
-        mList.add(new Word(6, "mars", "火星", true));
-        mList.add(new Word(7, "venus", "金星"));
-        mList.add(new Word(8, "jupiter", "木星"));
-        mList.add(new Word(9, "saturn", "土星"));
-        mList.add(new Word(10, "air", "空気"));
-        mList.add(new Word(11, "gravity", "重力"));
-        mList.add(new Word(12, "light", "光"));
-        mList.add(new Word(13, "rocket", "ロケット"));
-        mList.add(new Word(14, "satellite", "衛星"));
+    private SQLiteDatabase getDb() {
+        return MyApplication.getInstance().getDb();
     }
 
     public List<Word> getList() {
-        if (mList == null) loadData();
-        return mList;
+        ArrayList<Word> list = new ArrayList<>();
+
+        final Cursor cursor = getDb().rawQuery("SELECT * FROM words ORDER BY _id", null);
+        while (cursor.moveToNext()){
+            int id = cursor.getInt(cursor.getColumnIndex("_id"));
+            String eng = cursor.getString(cursor.getColumnIndex("english"));
+            String jpn = cursor.getString(cursor.getColumnIndex("japanese"));
+            int done = cursor.getInt(cursor.getColumnIndex("done"));
+            final Word word = new Word(id, eng, jpn, done != 0);
+            list.add(word);
+        }
+        cursor.close();
+
+        return list;
     }
 
     public Word getById(int id) {
@@ -48,11 +46,18 @@ public class WordsRepository {
             return new Word(0, "", "");
         }
 
-        for (int i = 0; i < mList.size(); i++) {
-            if (mList.get(i)._id == id) return mList.get(i);
+        Word word = null;
+        String[] args = { Integer.toString(id) };
+        final Cursor cursor = getDb().rawQuery("SELECT * FROM words WHERE _id = ?", args);
+        if (cursor.moveToNext()){
+            String eng = cursor.getString(cursor.getColumnIndex("english"));
+            String jpn = cursor.getString(cursor.getColumnIndex("japanese"));
+            int done = cursor.getInt(cursor.getColumnIndex("done"));
+            word = new Word(id, eng, jpn, done != 0);
         }
+        cursor.close();
 
-        return null;
+        return word;
     }
 
     public void updateDone(int id, boolean done) throws InvalidKeyException {
@@ -61,21 +66,16 @@ public class WordsRepository {
             throw new InvalidKeyException("");
         }
 
-        word.done = done;
-    }
-
-    private int getMaxId() {
-        int max = Integer.MIN_VALUE;
-        for (Word i: mList) {
-            if (i._id > max) max = i._id;
-        }
-        return max;
+        String sql = "UPDATE words SET done = ? WHERE _id = ? ";
+        String [] args = { done ? "1" : "0", Integer.toString(id)};
+        getDb().execSQL(sql, args);
     }
 
     public void save(Word word) throws InvalidKeyException {
         if (word._id == 0) {
-            word._id = getMaxId() + 1;
-            mList.add(word);
+            String sql = "INSERT INTO words (english, japanese, done) VALUES (?, ?, ?) ";
+            String[] args = { word.english, word.japanese, word.done ? "1" : "0" };
+            getDb().execSQL(sql, args);
             return;
         }
 
@@ -83,15 +83,19 @@ public class WordsRepository {
         if (existing == null) {
             throw new InvalidKeyException("");
         }
-        existing.english = word.english;
-        existing.japanese = word.japanese;
-        existing.done = word.done;
+
+        String sql = "UPDATE words SET english = ?, japanese = ?, done =? WHERE _id = ? ";
+        String[] args = { word.english, word.japanese, word.done ? "1" : "0", Integer.toString(word._id) };
+        getDb().execSQL(sql, args);
     }
 
     public void delete(int id) throws Exception {
         Word existing = getById(id);
         if (existing == null) return;
-        mList.remove(existing);
+
+        String sql = "DELETE FROM words WHERE _id = ? ";
+        String [] args = { Integer.toString(id)};
+        getDb().execSQL(sql, args);
     }
 
 }
