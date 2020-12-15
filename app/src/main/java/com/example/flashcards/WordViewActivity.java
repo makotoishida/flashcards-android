@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +29,6 @@ public class WordViewActivity extends AppCompatActivity {
     private TextView txtDone;
     private Button btnDone;
     private Button btnUndone;
-    private Button btnEdit;
 
     // データベースに接続されたリポジトリクラスのインスタンスを取得して保持しておく。
     private WordsRepository mRepository = MyApplication.getInstance().getWordsRepository();
@@ -40,9 +40,6 @@ public class WordViewActivity extends AppCompatActivity {
 
         // 画面上部のActionBarの左端に「←（戻る）」アイコンを表示する。
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        btnEdit = findViewById(R.id.btnEdit);
-        btnEdit.setOnClickListener(mBtnEditClick);
 
         txtEng = findViewById(R.id.txtEng);
         txtJpn = findViewById(R.id.txtJpn);
@@ -74,6 +71,29 @@ public class WordViewActivity extends AppCompatActivity {
         loadWord(mWordId);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.word_view_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.mnu_edit) {
+            startEditActivity();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // 「編集」ボタンが押された時の処理
+    private void startEditActivity(){
+        // 単語IDをインテントに入れて単語編集画面を開く。
+        Intent intent = new Intent(getApplicationContext(), WordEditActivity.class);
+        intent.putExtra("_id", mWordId);
+        startActivity(intent);
+    }
+
     // 指定された単語のデータをデータベースから取得して表示する。
     private void loadWord(int id) {
         Word word = mRepository.getById(id);
@@ -96,18 +116,6 @@ public class WordViewActivity extends AppCompatActivity {
         btnDone.setEnabled(!word.done);
         btnUndone.setEnabled(word.done);
     }
-
-    // 「編集」ボタンが押された時の処理
-    private View.OnClickListener mBtnEditClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // 単語IDをインテントに入れて単語編集画面を開く。
-            Intent intent = new Intent(getApplicationContext(), WordEditActivity.class);
-            intent.putExtra("_id", mWordId);
-            startActivity(intent);
-
-        }
-    };
 
     // 「覚えた」ボタンが押された時の処理
     private View.OnClickListener mBtnDoneClick = new View.OnClickListener() {

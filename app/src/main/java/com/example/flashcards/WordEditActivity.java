@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -33,7 +34,6 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
     private EditText txtEng;
     private EditText txtJpn;
     private CheckBox chkDone;
-    private Button btnDelete;
     private Button btnSave;
     private Handler mHandler;
 
@@ -48,8 +48,6 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
         // 画面上部のActionBarの左端に「←（戻る）」アイコンを表示する。
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        btnDelete = findViewById(R.id.btnDelete);
-        btnDelete.setOnClickListener(mBtnDeleteClick);
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(mBtnSaveClick);
 
@@ -84,6 +82,21 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
         loadWord(mWordId);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.word_edit_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.mnu_delete) {
+            onDeleteClick();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     // 指定された単語のデータをデータベースから取得して表示する。
     private void loadWord(int id) {
         Word word = mRepository.getById(id);
@@ -99,8 +112,8 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
 
         enableSaveButton();
 
-        // 新規追加の場合は削除ボタンを非表示にする。
-        btnDelete.setVisibility(word._id == 0 ? View.INVISIBLE : View.VISIBLE);
+//        // 新規追加の場合は削除ボタンを非表示にする。
+//        findViewById(R.id.mnu_delete).setVisibility(word._id == 0 ? View.INVISIBLE : View.VISIBLE);
     }
 
     // 保存ボタンが押せるか否かの制御。
@@ -141,19 +154,16 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
     }
 
     // 削除ボタンが押された時の処理
-    private final View.OnClickListener mBtnDeleteClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // 処理開始前に「削除してよろしいですか？」の確認ダイアログを表示する。
-            CommonHelper.showOkCancelDialog(v.getContext(), getString(R.string.msg_confirm_delete),
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        deleteWord();
-                    }
-                });
-        }
-    };
+    private void onDeleteClick() {
+        // 処理開始前に「削除してよろしいですか？」の確認ダイアログを表示する。
+        CommonHelper.showOkCancelDialog(this, getString(R.string.msg_confirm_delete),
+            new Runnable() {
+                @Override
+                public void run() {
+                    deleteWord();
+                }
+            });
+    }
 
     // 単語をデータベースから削除する。
     private void deleteWord() {
