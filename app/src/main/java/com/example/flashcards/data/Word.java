@@ -24,8 +24,4 @@ public class Word {
         return this.done ? "✔" : "";
     }
 
-    public int getDoneInteger() {
-        return this.done ? 1 : 0;
-    }
-
 }

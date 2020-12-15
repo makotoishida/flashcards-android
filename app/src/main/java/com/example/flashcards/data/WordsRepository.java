@@ -91,7 +91,7 @@ public class WordsRepository {
         }
 
         String sql = "UPDATE words SET done = ? WHERE _id = ? ";
-        String [] args = { boolToString(word.done), Integer.toString(id)};
+        String [] args = { boolToString(done), Integer.toString(id)};
         mDb.execSQL(sql, args);
     }
 
