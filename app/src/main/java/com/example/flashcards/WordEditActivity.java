@@ -85,7 +85,15 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.word_edit_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // 新規追加の場合は削除ボタンを非表示にする。
+        MenuItem mnuDelete = menu.findItem(R.id.mnu_delete);
+        mnuDelete.setVisible(mWordId != 0);
+        return true;
     }
 
     @Override
@@ -111,9 +119,6 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
         chkDone.setChecked(word.done);
 
         enableSaveButton();
-
-//        // 新規追加の場合は削除ボタンを非表示にする。
-//        findViewById(R.id.mnu_delete).setVisibility(word._id == 0 ? View.INVISIBLE : View.VISIBLE);
     }
 
     // 保存ボタンが押せるか否かの制御。
