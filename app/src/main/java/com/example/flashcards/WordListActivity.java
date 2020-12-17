@@ -27,7 +27,6 @@ import java.util.List;
 public class WordListActivity extends AppCompatActivity {
 
     private ListView listView;
-    ArrayAdapter<Word> mListAdapter;
     private Button btnAdd;
     private TextView txtCount;
 
@@ -40,9 +39,9 @@ public class WordListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_list);
 
-        mListAdapter = new WordListViewAdapter(this, R.layout.list_row);
+        WordListViewAdapter adapter = new WordListViewAdapter(this, R.layout.list_row);
         listView = findViewById(R.id.list);
-        listView.setAdapter(mListAdapter);
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener(mOnItemClick);
 
         btnAdd = findViewById(R.id.btnAdd);
@@ -60,11 +59,13 @@ public class WordListActivity extends AppCompatActivity {
         loadWordList();
     }
 
-    // 単語データの配列をデータベースから取得。
+    // 単語データの配列をデータベースから取得してリストに表示する。
     private void loadWordList() {
         List<Word> list = (ArrayList<Word>) mRepository.getList();
-        mListAdapter.clear();
-        mListAdapter.addAll(list);
+
+        WordListViewAdapter adapter = (WordListViewAdapter)listView.getAdapter();
+        adapter.clear();
+        adapter.addAll(list);
 
         txtCount.setText(String.format("%d", list.size()));
     }
@@ -73,7 +74,7 @@ public class WordListActivity extends AppCompatActivity {
     private AdapterView.OnItemClickListener mOnItemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Word word = mListAdapter.getItem(position);
+            Word word = (Word)listView.getItemAtPosition(position);
             Intent intent = new Intent(getApplicationContext(), WordViewActivity.class);
             intent.putExtra("_id", word._id);
             startActivity(intent);
