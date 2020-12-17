@@ -27,8 +27,7 @@ import java.util.List;
 public class WordListActivity extends AppCompatActivity {
 
     private ListView listView;
-    private ArrayList<Word> mDataset = new ArrayList<>();
-    ArrayAdapter<Word> adapter;
+    ArrayAdapter<Word> mListAdapter;
     private Button btnAdd;
     private TextView txtCount;
 
@@ -41,9 +40,9 @@ public class WordListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_list);
 
+        mListAdapter = new WordListViewAdapter(this, R.layout.list_row);
         listView = findViewById(R.id.list);
-        adapter = new MyAdapter(this, R.layout.list_row, mDataset);
-        listView.setAdapter(adapter);
+        listView.setAdapter(mListAdapter);
         listView.setOnItemClickListener(mOnItemClick);
 
         btnAdd = findViewById(R.id.btnAdd);
@@ -56,23 +55,25 @@ public class WordListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // データベースから全単語を取得して一覧に表示する。
         loadWordList();
     }
 
     // 単語データの配列をデータベースから取得。
     private void loadWordList() {
-        mDataset = (ArrayList<Word>) mRepository.getList();
-        adapter.clear();
-        adapter.addAll(mDataset);
+        List<Word> list = (ArrayList<Word>) mRepository.getList();
+        mListAdapter.clear();
+        mListAdapter.addAll(list);
 
-        txtCount.setText(String.format("%d", mDataset.size()));
+        txtCount.setText(String.format("%d", list.size()));
     }
 
-    // 一覧リストの行がタップされた時の処理
+    // リストの行がタップされた時の処理
     private AdapterView.OnItemClickListener mOnItemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Word word = mDataset.get(position);
+            Word word = mListAdapter.getItem(position);
             Intent intent = new Intent(getApplicationContext(), WordViewActivity.class);
             intent.putExtra("_id", word._id);
             startActivity(intent);
@@ -89,64 +90,4 @@ public class WordListActivity extends AppCompatActivity {
         }
     };
 
-    // 一覧リスト表示用アダプタ
-    public static class MyAdapter extends ArrayAdapter<Word> {
-        private final List<Word> mDataset;
-        private LayoutInflater inflater;
-        private int itemLayout;
-
-        public MyAdapter(@NonNull Context context, int layoutResourceId, @NonNull List<Word> data) {
-            super(context, layoutResourceId, data);
-            this.inflater =
-                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            this.itemLayout = layoutResourceId;
-            this.mDataset = data;
-        }
-
-
-        @Override
-        public int getCount() {
-            return mDataset.size();
-        }
-
-        @Override
-        public Word getItem(int position) {
-            return mDataset.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return mDataset.get(position)._id;
-        }
-
-        // 各行内の要素への参照を保持しておくための入れ物となるクラス。
-        class ViewHolder {
-            TextView txtEng;
-            TextView txtDone;
-        }
-
-        @Override
-        public @NonNull View getView(int position, View convertView, @NonNull ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                // 行のViewが新規に生成された場合はtxtEng, txtDoneへの参照をViewHolderに入れておく。
-                convertView = inflater.inflate(itemLayout, parent, false);
-                holder = new ViewHolder();
-                holder.txtEng = convertView.findViewById(R.id.txtRowText);
-                holder.txtDone = convertView.findViewById(R.id.txtDone);
-                convertView.setTag(holder);
-            } else {
-                // 行のViewが生成済みの場合はViewHolderを取得する。
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            // 現在の行に英語とDoneフラグの値を表示する。
-            Word word = getItem(position);
-            if(word != null){
-                holder.txtEng.setText(word.english);
-                holder.txtDone.setText(word.getDoneString());
-            }
-            return convertView;
-        }
-    }
 }
