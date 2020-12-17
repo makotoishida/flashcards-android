@@ -43,7 +43,6 @@ public class WordListActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.list);
         adapter = new MyAdapter(this, R.layout.list_row, mDataset);
-        adapter.setNotifyOnChange(true);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(mOnItemClick);
 
@@ -63,11 +62,8 @@ public class WordListActivity extends AppCompatActivity {
     // 単語データの配列をデータベースから取得。
     private void loadWordList() {
         mDataset = (ArrayList<Word>) mRepository.getList();
-
         adapter.clear();
         adapter.addAll(mDataset);
-        adapter.notifyDataSetChanged();
-        adapter.notifyDataSetInvalidated();
 
         txtCount.setText(String.format("%d", mDataset.size()));
     }
