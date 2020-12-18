@@ -14,6 +14,12 @@ import java.util.List;
 
 public class WordsRepository {
 
+    public final static String TABLE_NAME = "words";
+    public final static String COL_ID = "_id";
+    public final static String COL_ENGLISH = "english";
+    public final static String COL_JAPANESE = "japanese";
+    public final static String COL_DONE = "done";
+
     // SQLiteデータベースへの接続を保持するインスタンス。
     SQLiteDatabase mDb;
 
@@ -43,7 +49,7 @@ public class WordsRepository {
 
         // tryの括弧内でCursorを生成することで自動的にcloseされる。
         // 　参考：https://mslgt.hatenablog.com/entry/2018/04/05/073400
-        try(final Cursor cursor = mDb.rawQuery("SELECT * FROM words ORDER BY _id", null)){
+        try(final Cursor cursor = mDb.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + COL_ID, null)){
             while (cursor.moveToNext()){
                 final Word word = buildWordFromCursor(cursor);
                 list.add(word);
@@ -64,7 +70,7 @@ public class WordsRepository {
 
         // tryの括弧内でCursorを生成することで自動的にcloseされる。
         // 　参考：https://mslgt.hatenablog.com/entry/2018/04/05/073400
-        try (final Cursor cursor = mDb.rawQuery("SELECT * FROM words WHERE _id = ?", args)) {
+        try (final Cursor cursor = mDb.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COL_ID + " = ?", args)) {
             // 主キーで絞っているため結果は1行か0行かのどちらかなのでwhileでループする必要はない。
             if (cursor.moveToFirst()){
                 word = buildWordFromCursor(cursor);
@@ -75,10 +81,10 @@ public class WordsRepository {
     }
 
     private Word buildWordFromCursor(Cursor c) {
-        int id = c.getInt(c.getColumnIndex("_id"));
-        String eng = c.getString(c.getColumnIndex("english"));
-        String jpn = c.getString(c.getColumnIndex("japanese"));
-        int done = c.getInt(c.getColumnIndex("done"));
+        int id = c.getInt(c.getColumnIndex(COL_ID));
+        String eng = c.getString(c.getColumnIndex(COL_ENGLISH));
+        String jpn = c.getString(c.getColumnIndex(COL_JAPANESE));
+        int done = c.getInt(c.getColumnIndex(COL_DONE));
         final Word word = new Word(id, eng, jpn, intToBoolean(done));
         return word;
     }
@@ -90,7 +96,7 @@ public class WordsRepository {
             throw new InvalidKeyException("");
         }
 
-        String sql = "UPDATE words SET done = ? WHERE _id = ? ";
+        String sql = "UPDATE " + TABLE_NAME + " SET " + COL_DONE + " = ? WHERE (" + COL_ID + " = ?) ";
         String [] args = { boolToString(done), Integer.toString(id)};
         mDb.execSQL(sql, args);
     }
@@ -98,8 +104,12 @@ public class WordsRepository {
     // 単語を保存する。idが0の場合は新規追加、0以外の場合は更新処理を行う。
     public void save(Word word) throws InvalidKeyException, SQLException {
         if (word._id == 0) {
-            String sql = "INSERT INTO words (english, japanese, done) VALUES (?, ?, ?) ";
-            String[] args = { word.english, word.japanese, word.done ? "1" : "0" };
+            String sql = "INSERT INTO " + TABLE_NAME + " ("
+                    + COL_ENGLISH + ", "
+                    + COL_JAPANESE + ", "
+                    + COL_DONE
+                    + ") VALUES (?, ?, ?) ";
+            String[] args = { word.english, word.japanese, boolToString(word.done) };
             mDb.execSQL(sql, args);
             return;
         }
@@ -109,8 +119,12 @@ public class WordsRepository {
             throw new InvalidKeyException("");
         }
 
-        String sql = "UPDATE words SET english = ?, japanese = ?, done =? WHERE _id = ? ";
-        String[] args = { word.english, word.japanese, word.done ? "1" : "0", Integer.toString(word._id) };
+        String sql = "UPDATE " + TABLE_NAME + " SET "
+                + COL_ENGLISH + " = ?, "
+                + COL_JAPANESE + " = ?, "
+                + COL_DONE + " =? "
+                + " WHERE (" + COL_ID + " = ?) ";
+        String[] args = { word.english, word.japanese, boolToString(word.done), Integer.toString(word._id) };
         mDb.execSQL(sql, args);
     }
 
@@ -119,7 +133,7 @@ public class WordsRepository {
         Word existing = getById(id);
         if (existing == null) return;
 
-        String sql = "DELETE FROM words WHERE _id = ? ";
+        String sql = "DELETE FROM " + TABLE_NAME + " WHERE (" + COL_ID + " = ?) ";
         String [] args = { Integer.toString(id)};
         mDb.execSQL(sql, args);
     }

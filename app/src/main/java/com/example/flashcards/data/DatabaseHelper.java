@@ -9,7 +9,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // データーベース名
     static final String DATABASE_NAME = "words.db";
 
-    // データベースのバージョン (カラムの追加などで、変更を加えた場合にカウントアップする)
+    // データベースのバージョン (カラムの追加などで変更を加えた場合にカウントアップする)
     static final int DATABASE_VERSION = 1;
 
     public DatabaseHelper(Context context) {
@@ -23,16 +23,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate( SQLiteDatabase db ) {
         // テーブルを作成
         db.execSQL(
-            "CREATE TABLE IF NOT EXISTS words ("
-                + "_id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL"
-                + ", english    TEXT NOT NULL"
-                + ", japanese   TEXT NOT NULL"
-                + ", done       INTEGER NOT NULL"
+            "CREATE TABLE IF NOT EXISTS " + WordsRepository.TABLE_NAME + " ("
+                + WordsRepository.COL_ID                + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL "
+                + ", " + WordsRepository.COL_ENGLISH    + " TEXT NOT NULL "
+                + ", " + WordsRepository.COL_JAPANESE   + " TEXT NOT NULL "
+                + ", " + WordsRepository.COL_DONE       + " INTEGER NOT NULL "
                 + ");"
         );
 
         // ここで、初期データ挿入可能
-
 
     }
 
