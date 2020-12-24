@@ -19,4 +19,5 @@
     <string name="msg_deleted">削除しました</string>
     <string name="lbl_add_title">単語追加</string>
     <string name="msg_confirm_delete">削除しますか？</string>
+    <string name="msg_add_word">新しい単語を追加しますか？</string>
 </resources>

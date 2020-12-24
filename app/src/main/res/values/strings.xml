@@ -18,4 +18,5 @@
     <string name="msg_deleted">Deleted</string>
     <string name="lbl_add_title">Add</string>
     <string name="msg_confirm_delete">Are you sure to delete?</string>
+    <string name="msg_add_word">Would you like to add a new word?</string>
 </resources>
