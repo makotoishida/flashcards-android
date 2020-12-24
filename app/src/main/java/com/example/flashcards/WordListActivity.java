@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.flashcards.data.Word;
 import com.example.flashcards.data.WordsRepository;
+import com.example.flashcards.services.CommonHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,13 @@ public class WordListActivity extends AppCompatActivity {
         adapter.addAll(list);
 
         txtCount.setText(String.format("%d", list.size()));
+
+        // 単語が一つも登録されていない場合、
+        if (list.size() == 0) {
+            // 「新しい単語を追加しますか？」ダイアログを表示する。
+            CommonHelper.showOkCancelDialog(this, getString(R.string.msg_add_word),
+                    () -> startNewWordActivity());
+        }
     }
 
     // リストの行がタップされた時の処理
@@ -85,10 +93,14 @@ public class WordListActivity extends AppCompatActivity {
     private View.OnClickListener mBtnAddOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), WordEditActivity.class);
-            intent.putExtra("_id", 0);
-            startActivity(intent);
+            startNewWordActivity();
         }
     };
+
+    private void startNewWordActivity() {
+        Intent intent = new Intent(getApplicationContext(), WordEditActivity.class);
+        intent.putExtra("_id", 0);
+        startActivity(intent);
+    }
 
 }

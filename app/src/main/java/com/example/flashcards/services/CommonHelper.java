@@ -14,24 +14,16 @@ public class CommonHelper {
     // Toastを表示する。
     // 　参考：https://developer.android.com/guide/topics/ui/notifiers/toasts?hl=ja
     public static void showToast(final Handler handler, final Context context, final int msgId) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                String msg = context.getString(msgId);
-                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-            }
+        handler.post(() -> {
+            String msg = context.getString(msgId);
+            Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
         });
     }
 
     // Snackbarを表示する。
     // 　参考：https://developer.android.com/training/snackbar?hl=ja
     public static void showSnackbar(final Handler handler, final View view, final int msgId) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Snackbar.make(view, msgId, Snackbar.LENGTH_LONG).show();
-            }
-        });
+        handler.post(() -> Snackbar.make(view, msgId, Snackbar.LENGTH_LONG).show());
     }
 
     // 例外の内容をダイアログで表示する。

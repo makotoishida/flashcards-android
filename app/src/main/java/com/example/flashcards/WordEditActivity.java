@@ -162,12 +162,7 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
     private void onDeleteClick() {
         // 処理開始前に「削除してよろしいですか？」の確認ダイアログを表示する。
         CommonHelper.showOkCancelDialog(this, getString(R.string.msg_confirm_delete),
-            new Runnable() {
-                @Override
-                public void run() {
-                    deleteWord();
-                }
-            });
+                () -> deleteWord());
     }
 
     // 単語をデータベースから削除する。
