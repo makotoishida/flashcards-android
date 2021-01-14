@@ -1,60 +1,77 @@
 package com.example.flashcards;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flashcards.data.Word;
 
-// 一覧リスト表示用アダプタ
-public class WordListViewAdapter extends ArrayAdapter<Word> {
-    private LayoutInflater inflater;
-    private int itemLayout;
+import java.util.List;
 
-    public WordListViewAdapter(@NonNull Context context, int layoutResourceId) {
-        super(context, layoutResourceId);
-        this.inflater =
-                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.itemLayout = layoutResourceId;
+// 一覧リスト表示用アダプタ
+public class WordListViewAdapter extends RecyclerView.Adapter<WordListViewAdapter.ViewHolder> {
+    private List<Word> mDataset;
+    private OnClickListener listener;
+
+    public WordListViewAdapter(List<Word> myDataset) {
+        super();
+        mDataset = myDataset;
+    }
+
+    public void updateDataset(List<Word> newDataset) {
+        mDataset.clear();
+        mDataset.addAll(newDataset);
+        notifyDataSetChanged();
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_row, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Word word = mDataset.get(position);
+        holder.txtEng.setText(word.english);
+        holder.txtDone.setText(word.getDoneString());
+
+        holder.itemView.setOnClickListener(v -> listener.onClick(v, word));
     }
 
     @Override
     public long getItemId(int position) {
-        return this.getItem(position)._id;
-    }
-
-    // 各行内の要素への参照を保持しておくための入れ物となるクラス。
-    class ViewHolder {
-        TextView txtEng;
-        TextView txtDone;
+        return mDataset.get(position)._id;
     }
 
     @Override
-    public @NonNull
-    View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            // 行のViewが新規に生成された場合はtxtEng, txtDoneへの参照をViewHolderに入れておく。
-            convertView = inflater.inflate(itemLayout, parent, false);
-            holder = new ViewHolder();
-            holder.txtEng = convertView.findViewById(R.id.txtRowText);
-            holder.txtDone = convertView.findViewById(R.id.txtDone);
-            convertView.setTag(holder);
-        } else {
-            // 行のViewが生成済みの場合はViewHolderを取得する。
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        // 現在の行に英語とDoneフラグの値を表示する。
-        Word word = getItem(position);
-        if(word != null){
-            holder.txtEng.setText(word.english);
-            holder.txtDone.setText(word.getDoneString());
-        }
-        return convertView;
+    public int getItemCount() {
+        return mDataset.size();
     }
+
+    // 各行内の要素への参照を保持しておくための入れ物となるクラス。
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView txtEng;
+        TextView txtDone;
+
+        public ViewHolder(@NonNull View v) {
+            super(v);
+            txtEng = v.findViewById(R.id.txtRowText);
+            txtDone = v.findViewById(R.id.txtDone);
+        }
+    }
+
+    public interface OnClickListener {
+        void onClick(View view, Word word);
+    }
+
+    public void setOnClickListener(OnClickListener listener) {
+        this.listener = listener;
+    }
+
 }

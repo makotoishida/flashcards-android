@@ -1,18 +1,14 @@
 package com.example.flashcards;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.flashcards.data.Word;
@@ -27,7 +23,7 @@ import java.util.List;
  */
 public class WordListActivity extends AppCompatActivity {
 
-    private ListView listView;
+    private RecyclerView listView;
     private Button btnAdd;
     private TextView txtCount;
 
@@ -40,10 +36,17 @@ public class WordListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_list);
 
-        WordListViewAdapter adapter = new WordListViewAdapter(this, R.layout.list_row);
         listView = findViewById(R.id.list);
+        listView.setLayoutManager(new LinearLayoutManager(this));
+        listView.setHasFixedSize(true);
+        WordListViewAdapter adapter = new WordListViewAdapter(new ArrayList<Word>(){});
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(mOnItemClick);
+
+        // 区切り線を表示
+        listView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        // 行がタップされたときの処理を指定。
+        adapter.setOnClickListener(mOnItemClick);
 
         btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(mBtnAddOnClick);
@@ -65,8 +68,7 @@ public class WordListActivity extends AppCompatActivity {
         List<Word> list = (ArrayList<Word>) mRepository.getList();
 
         WordListViewAdapter adapter = (WordListViewAdapter)listView.getAdapter();
-        adapter.clear();
-        adapter.addAll(list);
+        adapter.updateDataset(list);
 
         txtCount.setText(String.format("%d", list.size()));
 
@@ -78,24 +80,15 @@ public class WordListActivity extends AppCompatActivity {
         }
     }
 
-    // リストの行がタップされた時の処理
-    private AdapterView.OnItemClickListener mOnItemClick = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Word word = (Word)listView.getItemAtPosition(position);
-            Intent intent = new Intent(getApplicationContext(), WordViewActivity.class);
-            intent.putExtra("_id", word._id);
-            startActivity(intent);
-        }
+    // 行がタップされた時の処理
+    private WordListViewAdapter.OnClickListener mOnItemClick = (view, word) -> {
+        Intent intent = new Intent(getApplicationContext(), WordViewActivity.class);
+        intent.putExtra("_id", word._id);
+        startActivity(intent);
     };
 
     // 追加ボタンがタップされた時の処理
-    private View.OnClickListener mBtnAddOnClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            startNewWordActivity();
-        }
-    };
+    private View.OnClickListener mBtnAddOnClick = v -> startNewWordActivity();
 
     private void startNewWordActivity() {
         Intent intent = new Intent(getApplicationContext(), WordEditActivity.class);
