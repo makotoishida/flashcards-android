@@ -4,22 +4,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flashcards.data.Word;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // 一覧リスト表示用アダプタ
 public class WordListViewAdapter extends RecyclerView.Adapter<WordListViewAdapter.ViewHolder> {
-    private List<Word> mDataset;
-    private OnClickListener listener;
-
-    public WordListViewAdapter(List<Word> myDataset) {
-        super();
-        mDataset = myDataset;
-    }
+    private List<Word> mDataset = new ArrayList<Word>(){};
 
     public void updateDataset(List<Word> newDataset) {
         mDataset.clear();
@@ -41,7 +37,7 @@ public class WordListViewAdapter extends RecyclerView.Adapter<WordListViewAdapte
         holder.txtEng.setText(word.english);
         holder.txtDone.setText(word.getDoneString());
 
-        holder.itemView.setOnClickListener(v -> listener.onClick(v, word));
+        holder.itemView.setOnClickListener(v -> onItemClick(word));
     }
 
     @Override
@@ -66,12 +62,8 @@ public class WordListViewAdapter extends RecyclerView.Adapter<WordListViewAdapte
         }
     }
 
-    public interface OnClickListener {
-        void onClick(View view, Word word);
-    }
-
-    public void setOnClickListener(OnClickListener listener) {
-        this.listener = listener;
+    public void onItemClick(Word word) {
+        // タップされたときの処理が必要な場合はこのメソッドをオーバーライドする。
     }
 
 }

@@ -39,14 +39,8 @@ public class WordListActivity extends AppCompatActivity {
         listView = findViewById(R.id.list);
         listView.setLayoutManager(new LinearLayoutManager(this));
         listView.setHasFixedSize(true);
-        WordListViewAdapter adapter = new WordListViewAdapter(new ArrayList<Word>(){});
-        listView.setAdapter(adapter);
-
-        // 区切り線を表示
-        listView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
-        // 行がタップされたときの処理を指定。
-        adapter.setOnClickListener(mOnItemClick);
+        listView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));  // 区切り線を表示
+        listView.setAdapter(mAdapter);
 
         btnAdd = findViewById(R.id.btnAdd);
         btnAdd.setOnClickListener(mBtnAddOnClick);
@@ -80,11 +74,16 @@ public class WordListActivity extends AppCompatActivity {
         }
     }
 
-    // 行がタップされた時の処理
-    private WordListViewAdapter.OnClickListener mOnItemClick = (view, word) -> {
-        Intent intent = new Intent(getApplicationContext(), WordViewActivity.class);
-        intent.putExtra("_id", word._id);
-        startActivity(intent);
+    private WordListViewAdapter mAdapter = new WordListViewAdapter(){
+        // 行がタップされたときの処理を指定。
+        @Override
+        public void onItemClick(Word word) {
+            super.onItemClick(word);
+
+            Intent intent = new Intent(getApplicationContext(), WordViewActivity.class);
+            intent.putExtra("_id", word._id);
+            startActivity(intent);
+        }
     };
 
     // 追加ボタンがタップされた時の処理
