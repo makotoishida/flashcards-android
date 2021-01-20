@@ -142,7 +142,7 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
             String eng = txtEng.getText().toString();
             String jpn = txtJpn.getText().toString();
             boolean done = chkDone.isChecked();
-            Word word = new Word(mWordId, eng, jpn ,done);
+            Word word = new Word(mWordId, eng, jpn ,done, 0);
 
             mRepository.save(word);
 

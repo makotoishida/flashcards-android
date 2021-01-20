@@ -1,5 +1,6 @@
 package com.example.flashcards;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,19 @@ import java.util.List;
 
 // 一覧リスト表示用アダプタ
 public class WordListViewAdapter extends RecyclerView.Adapter<WordListViewAdapter.ViewHolder> {
-    private List<Word> mDataset = new ArrayList<Word>(){};
+    private static final String TAG = "WordListViewAdapter";
+    protected List<Word> mDataset = new ArrayList<Word>(){};
 
     public void updateDataset(List<Word> newDataset) {
         mDataset.clear();
         mDataset.addAll(newDataset);
         notifyDataSetChanged();
+
+        // デバッグ出力。
+        for (int i = 0; i < mDataset.size(); i++) {
+            Word w = mDataset.get(i);
+            Log.d(TAG, String.format("%s, %s, %d", w.english, w.japanese, w.sort_order ));
+        }
     }
 
     @NonNull
@@ -64,6 +72,10 @@ public class WordListViewAdapter extends RecyclerView.Adapter<WordListViewAdapte
 
     public void onItemClick(Word word) {
         // タップされたときの処理が必要な場合はこのメソッドをオーバーライドする。
+    }
+
+    public void onItemMoved(int fromPosition, int toPosition) {
+        // ドラッグで並び替えされたときの処理が必要な場合はこのメソッドをオーバーライドする。
     }
 
 }
