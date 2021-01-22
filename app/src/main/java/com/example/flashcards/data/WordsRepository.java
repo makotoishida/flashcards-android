@@ -120,6 +120,30 @@ public class WordsRepository {
         mDb.execSQL(sql, args);
     }
 
+    /***
+     * 並び替えが行われたときにFrom〜Toの間にあるレコードのsort_orderカラムの値を更新する。
+     *
+     * 例1) [A, B, C, D, E]の5レコードがあって、BをDの後ろに移動した場合（From=1, To=3）
+     *
+     * 　変更前        更新対象（3レコード）     変更後
+     * 　　A : 0                              0
+     * 　　B : 1       → 3 （移動先へ）         3
+     * 　　C : 2       → 1 （一つ上へ）         1
+     * 　　D : 3       → 2 （一つ上へ）         2
+     * 　　E : 4                              4
+     *
+     * 例2) [A, B, C, D, E]の5レコードがあって、EをAの後ろに移動した場合（From=4, To=1）
+     *
+     * 　変更前        更新対象（4レコード）     変更後
+     * 　　A : 0                              0
+     * 　　B : 1       → 2 （一つ下へ）         2
+     * 　　C : 2       → 3 （一つ下へ）         3
+     * 　　D : 3       → 4 （一つ下へ）         4
+     * 　　E : 4       → 1 （移動先へ）         1
+     *
+     * 注意）レコードが削除されたときにsort_orderに飛び番が出来て連番ではなくなるので、
+     * 　　　その場合でも破綻しないようにロジックを組む必要がある。
+     ***/
     public void updateSortOrder(List<Word> list, int fromPosition, int toPosition) throws InvalidKeyException {
 
         Word moving = list.get(fromPosition);

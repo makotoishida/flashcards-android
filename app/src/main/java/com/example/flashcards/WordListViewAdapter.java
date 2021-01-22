@@ -5,14 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.flashcards.data.Word;
-
 import java.util.ArrayList;
 import java.util.List;
+import com.example.flashcards.data.Word;
+
 
 // 一覧リスト表示用アダプタ
 public class WordListViewAdapter extends RecyclerView.Adapter<WordListViewAdapter.ViewHolder> {
@@ -70,12 +68,18 @@ public class WordListViewAdapter extends RecyclerView.Adapter<WordListViewAdapte
         }
     }
 
+    // タップされたときの処理が必要な場合はこのメソッドをオーバーライドすること。
     public void onItemClick(Word word) {
-        // タップされたときの処理が必要な場合はこのメソッドをオーバーライドする。
     }
 
+    // 並び替えされたときの処理（e.g. データベースの更新など）がさらに必要な場合はこのメソッドをオーバーライドすること。
     public void onItemMoved(int fromPosition, int toPosition) {
-        // ドラッグで並び替えされたときの処理が必要な場合はこのメソッドをオーバーライドする。
+
+        // 内部的に持っているリストの順序を変更する。
+        mDataset.add(toPosition, mDataset.remove(fromPosition));
+
+        // リスト内のアイテムが移動されたことをRecyclerViewに通知する。
+        notifyItemMoved(fromPosition, toPosition);
     }
 
 }

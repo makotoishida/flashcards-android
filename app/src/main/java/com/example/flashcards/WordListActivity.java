@@ -95,18 +95,17 @@ public class WordListActivity extends AppCompatActivity {
 
         @Override
         public void onItemMoved(int fromPosition, int toPosition) {
-            super.onItemMoved(fromPosition, toPosition);
-
             Log.d(TAG, String.format("Moved from %d, To %d", fromPosition, toPosition));
 
+            // 並び替えをデータベースに反映する。（sort_orderカラムを更新）
             try {
                 mRepository.updateSortOrder(mDataset, fromPosition, toPosition);
             } catch (InvalidKeyException e) {
                 e.printStackTrace();
             }
 
-            mDataset.add(toPosition, mDataset.remove(fromPosition));
-            this.notifyItemMoved(fromPosition, toPosition);
+            // Adapterの内部に持っているリスト(mDataset)の順序を変更する。
+            super.onItemMoved(fromPosition, toPosition);
         }
     };
 
