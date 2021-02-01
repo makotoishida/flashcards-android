@@ -30,31 +30,18 @@ public class CommonHelper {
     public static void showErrorDialog(final Exception e, final Context context) {
         new AlertDialog.Builder(context)
                 .setMessage(e.getMessage())
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss()).show();
     }
 
     // OK/Cancelダイアログを表示する。
     public static void showOkCancelDialog(final Context context, final String msg, final Runnable callback) {
         new AlertDialog.Builder(context)
                 .setMessage(msg)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        callback.run();
-                        dialog.dismiss();
-                    }
+                .setPositiveButton("OK", (dialog, which) -> {
+                    callback.run();
+                    dialog.dismiss();
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        dialog.cancel();
-                    }
-                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
                 .show();
     }
 
