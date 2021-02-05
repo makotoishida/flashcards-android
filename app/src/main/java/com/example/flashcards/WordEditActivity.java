@@ -129,12 +129,7 @@ public class WordEditActivity extends AppCompatActivity implements TextWatcher {
     }
 
     // 保存ボタンが押された時の処理
-    private final View.OnClickListener mBtnSaveClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            saveWord();
-        }
-    };
+    private final View.OnClickListener mBtnSaveClick = v -> saveWord();
 
     // 単語をデータベースに保存する。
     private void saveWord() {

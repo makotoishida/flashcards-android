@@ -2,21 +2,21 @@ package com.example.flashcards;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.flashcards.data.Word;
 import com.example.flashcards.data.WordsRepository;
+import com.example.flashcards.services.CommonHelper;
 
 import java.security.InvalidKeyException;
-import java.time.Duration;
 
 /**
  * 単語確認画面
@@ -118,20 +118,10 @@ public class WordViewActivity extends AppCompatActivity {
     }
 
     // 「覚えた」ボタンが押された時の処理
-    private View.OnClickListener mBtnDoneClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            updateDone(true);
-        }
-    };
+    private View.OnClickListener mBtnDoneClick = v -> updateDone(true);
 
     // 「忘れた」ボタンが押された時の処理
-    private View.OnClickListener mBtnUndoneClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            updateDone(false);
-        }
-    };
+    private View.OnClickListener mBtnUndoneClick = v -> updateDone(false);
 
     private void updateDone(boolean done) {
         try {
